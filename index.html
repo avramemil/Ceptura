@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-search.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="js/leaflet-search.js"></script>
+        <script src="data/Imobil_1.js"></script>
+        <script src="data/Date_appConstr_2_2.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[45.01524978290196,26.32179538546912],[45.01727415965503,26.324372297994795]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_Google_0');
+        map.getPane('pane_Google_0').style.zIndex = 400;
+        var layer_Google_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            pane: 'pane_Google_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_Google_0;
+        function pop_Imobil_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ID</th>\
+                        <td>' + (feature.properties['ID'] !== null ? autolinker.link(feature.properties['ID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Sector_cadastral</th>\
+                        <td>' + (feature.properties['Sector_cadastral'] !== null ? autolinker.link(feature.properties['Sector_cadastral'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Categorie_folosinta</th>\
+                        <td>' + (feature.properties['Categorie_folosinta'] !== null ? autolinker.link(feature.properties['Categorie_folosinta'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Tip zona Co_NCo</th>\
+                        <td>' + (feature.properties['Tip zona Co_NCo'] !== null ? autolinker.link(feature.properties['Tip zona Co_NCo'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Imprejmuit_Neimprejmuit</th>\
+                        <td>' + (feature.properties['Imprejmuit_Neimprejmuit'] !== null ? autolinker.link(feature.properties['Imprejmuit_Neimprejmuit'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Ident_electr</th>\
+                        <td>' + (feature.properties['Ident_electr'] !== null ? autolinker.link(feature.properties['Ident_electr'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Nr_CF_Veche</th>\
+                        <td>' + (feature.properties['Nr_CF_Veche'] !== null ? autolinker.link(feature.properties['Nr_CF_Veche'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Nr_Cad_Vechi</th>\
+                        <td>' + (feature.properties['Nr_Cad_Vechi'] !== null ? autolinker.link(feature.properties['Nr_Cad_Vechi'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Nr_TP</th>\
+                        <td>' + (feature.properties['Nr_TP'] !== null ? autolinker.link(feature.properties['Nr_TP'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Observatii_teren</th>\
+                        <td>' + (feature.properties['Observatii_teren'] !== null ? autolinker.link(feature.properties['Observatii_teren'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Nr_parcela</th>\
+                        <td>' + (feature.properties['Nr_parcela'] !== null ? autolinker.link(feature.properties['Nr_parcela'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Supraf_masurata</th>\
+                        <td>' + (feature.properties['Supraf_masurata'] !== null ? autolinker.link(feature.properties['Supraf_masurata'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Supraf_act</th>\
+                        <td>' + (feature.properties['Supraf_act'] !== null ? autolinker.link(feature.properties['Supraf_act'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Intravilan_Extravilan</th>\
+                        <td>' + (feature.properties['Intravilan_Extravilan'] !== null ? autolinker.link(feature.properties['Intravilan_Extravilan'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Numar_tarla</th>\
+                        <td>' + (feature.properties['Numar_tarla'] !== null ? autolinker.link(feature.properties['Numar_tarla'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Nr_parcela_TP</th>\
+                        <td>' + (feature.properties['Nr_parcela_TP'] !== null ? autolinker.link(feature.properties['Nr_parcela_TP'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Nr_topo_parcela</th>\
+                        <td>' + (feature.properties['Nr_topo_parcela'] !== null ? autolinker.link(feature.properties['Nr_topo_parcela'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Mentiuni</th>\
+                        <td>' + (feature.properties['Mentiuni'] !== null ? autolinker.link(feature.properties['Mentiuni'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Persoane</th>\
+                        <td>' + (feature.properties['Persoane'] !== null ? autolinker.link(feature.properties['Persoane'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Informatie_personala_imobil</th>\
+                        <td>' + (feature.properties['Informatie_personala_imobil'] !== null ? autolinker.link(feature.properties['Informatie_personala_imobil'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Imobil_1_0() {
+            return {
+                pane: 'pane_Imobil_1',
+                opacity: 1,
+                color: 'rgba(38,242,38,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 6.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(145,82,45,0.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Imobil_1');
+        map.getPane('pane_Imobil_1').style.zIndex = 401;
+        map.getPane('pane_Imobil_1').style['mix-blend-mode'] = 'normal';
+        var layer_Imobil_1 = new L.geoJson(json_Imobil_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Imobil_1',
+            layerName: 'layer_Imobil_1',
+            pane: 'pane_Imobil_1',
+            onEachFeature: pop_Imobil_1,
+            style: style_Imobil_1_0,
+        });
+        bounds_group.addLayer(layer_Imobil_1);
+        map.addLayer(layer_Imobil_1);
+        function pop_Date_appConstr_2_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Text_2</th>\
+                        <td>' + (feature.properties['Text_2'] !== null ? autolinker.link(feature.properties['Text_2'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ID</th>\
+                        <td>' + (feature.properties['ID'] !== null ? autolinker.link(feature.properties['ID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Nr_contructie</th>\
+                        <td>' + (feature.properties['Nr_contructie'] !== null ? autolinker.link(feature.properties['Nr_contructie'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Date_appConstr_2_2_0() {
+            return {
+                pane: 'pane_Date_appConstr_2_2',
+                opacity: 1,
+                color: 'rgba(212,58,226,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 4.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(196,60,57,0.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Date_appConstr_2_2');
+        map.getPane('pane_Date_appConstr_2_2').style.zIndex = 402;
+        map.getPane('pane_Date_appConstr_2_2').style['mix-blend-mode'] = 'normal';
+        var layer_Date_appConstr_2_2 = new L.geoJson(json_Date_appConstr_2_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Date_appConstr_2_2',
+            layerName: 'layer_Date_appConstr_2_2',
+            pane: 'pane_Date_appConstr_2_2',
+            onEachFeature: pop_Date_appConstr_2_2,
+            style: style_Date_appConstr_2_2_0,
+        });
+        bounds_group.addLayer(layer_Date_appConstr_2_2);
+        map.addLayer(layer_Date_appConstr_2_2);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'<img src="legend/Date_appConstr_2_2.png" /> Date_app — Constr_2': layer_Date_appConstr_2_2,'<img src="legend/Imobil_1.png" /> Imobil': layer_Imobil_1,"Google": layer_Google_0,}).addTo(map);
+        setBounds();
+        var i = 0;
+        layer_Imobil_1.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['ID'] !== null?String('<div style="color: #323232; font-size: 10pt; font-family: \'Arial\', sans-serif;">' + layer.feature.properties['ID']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Imobil_1'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Date_appConstr_2_2.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Nr_contructie'] !== null?String('<div style="color: #323232; font-size: 1pt; font-family: \'Arial\', sans-serif;">' + layer.feature.properties['Nr_contructie']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Date_appConstr_2_2'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        map.addControl(new L.Control.Search({
+            layer: layer_Imobil_1,
+            initial: false,
+            hideMarkerOnCollapse: true,
+            propertyName: 'Persoane'}));
+        document.getElementsByClassName('search-button')[0].className +=
+         ' fa fa-binoculars';
+        resetLabels([layer_Imobil_1,layer_Date_appConstr_2_2]);
+        map.on("zoomend", function(){
+            resetLabels([layer_Imobil_1,layer_Date_appConstr_2_2]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_Imobil_1,layer_Date_appConstr_2_2]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_Imobil_1,layer_Date_appConstr_2_2]);
+        });
+        </script>
+    </body>
+</html>
